@@ -1,0 +1,87 @@
+╔════════════════════════════════════════════════════════════════╗
+║         SYSTEM PROMPTS FIX - APPLY CHECKLIST                   ║
+╚════════════════════════════════════════════════════════════════╝
+
+Problem: 406 errors when loading/saving system prompts
+Status:  Code fixes applied ✓ | Database setup needed ⏳
+
+┌────────────────────────────────────────────────────────────────┐
+│ STEP 1: RUN SQL SETUP (2 minutes)                              │
+└────────────────────────────────────────────────────────────────┘
+
+[ ] 1. Open https://supabase.com/dashboard
+[ ] 2. Select your project
+[ ] 3. Click "SQL Editor" in left sidebar
+[ ] 4. Click "New Query"
+[ ] 5. Open file: supabase-setup.sql
+[ ] 6. Copy ALL contents (Ctrl+A, Ctrl+C)
+[ ] 7. Paste into SQL Editor (Ctrl+V)
+[ ] 8. Click "Run" button (or Ctrl+Enter)
+[ ] 9. Verify you see "Setup complete! Found 2 system prompts"
+
+┌────────────────────────────────────────────────────────────────┐
+│ STEP 2: RESTART DEV SERVER (30 seconds)                       │
+└────────────────────────────────────────────────────────────────┘
+
+[ ] 1. Stop current server (Ctrl+C in terminal)
+[ ] 2. Run: npm run dev
+[ ] 3. Wait for "Ready" message
+
+┌────────────────────────────────────────────────────────────────┐
+│ STEP 3: TEST THE FIX (1 minute)                               │
+└────────────────────────────────────────────────────────────────┘
+
+[ ] 1. Open: http://localhost:3000/dashboard/prompts
+[ ] 2. Verify "Voice Agent Prompt" tab loads (no 406 error)
+[ ] 3. Verify "SMS Agent Prompt" tab loads (no 406 error)
+[ ] 4. Try editing text in Voice tab
+[ ] 5. Click "Save Changes"
+[ ] 6. Verify success toast appears
+[ ] 7. Refresh page (F5)
+[ ] 8. Verify changes persisted
+
+┌────────────────────────────────────────────────────────────────┐
+│ OPTIONAL: VERIFY CONNECTION                                    │
+└────────────────────────────────────────────────────────────────┘
+
+[ ] Run: npm run test:supabase
+[ ] Should show: "Found 2 prompts" and "All tests passed!"
+
+┌────────────────────────────────────────────────────────────────┐
+│ TROUBLESHOOTING                                                │
+└────────────────────────────────────────────────────────────────┘
+
+Still getting 406 errors?
+
+1. Check browser console (F12) for specific error
+2. Verify SQL ran successfully:
+   - In Supabase SQL Editor, run: SELECT * FROM system_prompts;
+   - Should see 2 rows
+3. Check .env.local has correct credentials
+4. Try hard refresh: Ctrl+Shift+R
+5. See QUICK_FIX_GUIDE.md for more help
+
+┌────────────────────────────────────────────────────────────────┐
+│ WHAT WAS FIXED                                                 │
+└────────────────────────────────────────────────────────────────┘
+
+✓ Code: Better error handling (auto-applied)
+✓ Code: Auto-creates missing prompts (auto-applied)
+⏳ Database: RLS policies (you need to run SQL)
+⏳ Database: Seed data (you need to run SQL)
+
+┌────────────────────────────────────────────────────────────────┐
+│ FILES TO REFERENCE                                             │
+└────────────────────────────────────────────────────────────────┘
+
+Quick Start:     QUICK_FIX_GUIDE.md
+Technical:       SYSTEM_PROMPTS_FIX.md
+Summary:         FIX_SUMMARY.md
+SQL Setup:       supabase-setup.sql
+Test Script:     npm run test:supabase
+
+╔════════════════════════════════════════════════════════════════╗
+║  Total Time: ~5 minutes                                        ║
+║  Risk Level: Low (safe for demo/dev)                           ║
+║  Breaking Changes: None                                        ║
+╚════════════════════════════════════════════════════════════════╝
