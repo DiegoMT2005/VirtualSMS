@@ -6,12 +6,6 @@ import { handleConversation } from '@/lib/ai/conversation-agent';
 // Force this route to be dynamic
 export const dynamic = 'force-dynamic';
 
-// Create Supabase client with service role
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
 // Verify Twilio request signature (SECURITY)
 function verifyTwilioSignature(request: NextRequest, body: Record<string, string>): boolean {
   const signature = request.headers.get('x-twilio-signature');
@@ -65,6 +59,17 @@ async function generateAIResponse(
 
 export async function POST(request: NextRequest) {
   try {
+    // Create Supabase client
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    
+    if (!supabaseUrl || !supabaseKey) {
+      console.error('❌ Supabase configuration missing');
+      return new NextResponse('Configuration error', { status: 500 });
+    }
+    
+    const supabase = createClient(supabaseUrl, supabaseKey);
+    
     // Parse form data (Twilio sends application/x-www-form-urlencoded)
     const formData = await request.formData();
     const data: Record<string, string> = {};

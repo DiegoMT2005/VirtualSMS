@@ -5,12 +5,6 @@ import crypto from 'crypto';
 // Force this route to be dynamic
 export const dynamic = 'force-dynamic';
 
-// Create Supabase client with service role (server-side)
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY! // Use service role for server
-);
-
 // Verify VAPI webhook signature for security
 function verifyVapiSignature(
   payload: string,
@@ -27,6 +21,16 @@ function verifyVapiSignature(
 }
 
 export async function POST(request: NextRequest) {
+  // Create Supabase client
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (!supabaseUrl || !supabaseKey) {
+    return NextResponse.json({ error: 'Configuration error' }, { status: 500 });
+  }
+  
+  const supabase = createClient(supabaseUrl, supabaseKey);
+  
   try {
     // Get raw body for signature verification
     const body = await request.text();
@@ -111,7 +115,7 @@ export async function POST(request: NextRequest) {
 
         // If booking was confirmed, create appointment
         if (event.call.metadata?.booking_confirmed && event.call.metadata?.booking_data) {
-          await createAppointmentFromCall(event.call, clientId);
+          await createAppointmentFromCall(event.call, clientId, supabase);
         }
 
         console.log('✅ Call completed and updated');
@@ -158,7 +162,7 @@ export async function POST(request: NextRequest) {
 }
 
 // Helper function: Create appointment from successful booking call
-async function createAppointmentFromCall(call: any, clientId: string) {
+async function createAppointmentFromCall(call: any, clientId: string, supabase: any) {
   try {
     const bookingData = call.metadata?.booking_data;
     
