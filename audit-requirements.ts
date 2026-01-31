@@ -739,7 +739,7 @@ class RequirementsAuditor {
     console.log(`${'='.repeat(70)}\n`);
 
     // Group by category
-    const categories = [...new Set(this.results.map(r => r.category))];
+    const categories = Array.from(new Set(this.results.map(r => r.category)));
     
     categories.forEach(category => {
       console.log(`\n📁 ${category}`);
@@ -842,7 +842,7 @@ function generateMarkdownReport(report: AuditReport): string {
   }
 
   md += `## 📋 Detailed Results\n\n`;
-  const categories = [...new Set(report.results.map(r => r.category))];
+  const categories = Array.from(new Set(report.results.map(r => r.category)));
   
   categories.forEach(category => {
     md += `### ${category}\n\n`;
@@ -884,4 +884,5 @@ if (require.main === module) {
   main().catch(console.error);
 }
 
-export { RequirementsAuditor, AuditReport, AuditResult };
+export { RequirementsAuditor };
+export type { AuditReport, AuditResult };
