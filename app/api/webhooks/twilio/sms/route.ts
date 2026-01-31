@@ -3,6 +3,9 @@ import { createClient } from '@supabase/supabase-js';
 import twilio from 'twilio';
 import { handleConversation } from '@/lib/ai/conversation-agent';
 
+// Force this route to be dynamic
+export const dynamic = 'force-dynamic';
+
 // Create Supabase client with service role
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
