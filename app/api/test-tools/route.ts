@@ -1,14 +1,19 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
-const TEST_CLIENT_ID = process.env.DEFAULT_CLIENT_ID || 'test-client-id';
-
 export async function GET() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const TEST_CLIENT_ID = process.env.DEFAULT_CLIENT_ID || 'test-client-id';
+
+  if (!supabaseUrl || !supabaseKey) {
+    return NextResponse.json(
+      { error: 'Supabase configuration missing' },
+      { status: 500 }
+    );
+  }
+
+  const supabase = createClient(supabaseUrl, supabaseKey);
   const results: any = {
     timestamp: new Date().toISOString(),
     clientId: TEST_CLIENT_ID,
